@@ -2,7 +2,7 @@
 set -e
 
 # Configuration
-SSH_PORT="${1:-456}"
+SSH_PORT="${1:-2222}"
 BAN_TIME="${2:-3600}"
 FIND_TIME="${3:-600}"
 MAX_RETRY="${4:-3}"
@@ -60,14 +60,15 @@ bantime = $BAN_TIME
 findtime = $FIND_TIME
 maxretry = $MAX_RETRY
 
-# Additional protection
-[sshd-ddos]
+# Additional SSH protection - using standard sshd filter with stricter settings
+[sshd-aggressive]
 enabled = true
+filter  = sshd
 port    = $SSH_PORT
 logpath = %(sshd_log)s
 backend = systemd
 bantime = $BAN_TIME
-findtime = $FIND_TIME
+findtime = 300
 maxretry = 2
 EOF
 

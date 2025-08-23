@@ -2,7 +2,7 @@
 set -e
 
 # Configuration
-SSH_PORT="${1:-456}"
+SSH_PORT="${1:-2219}"
 ALLOWED_GROUP="${2:-admin}"
 SSHD_CONFIG="/etc/ssh/sshd_config"
 LOGFILE="/var/log/ssh-setup.log"

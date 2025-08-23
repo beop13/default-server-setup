@@ -31,10 +31,10 @@ sudo ./setup.sh [USERNAME] [SSH_PORT] [ENABLE_HTTP] [ENABLE_HTTPS] [SSH_KEY_FILE
 sudo ./setup.sh myuser 2222
 
 # Enable web server ports
-sudo ./setup.sh admin 456 true true
+sudo ./setup.sh admin 2222 true true
 
 # With SSH key file
-sudo ./setup.sh admin 456 false false ~/.ssh/id_rsa.pub
+sudo ./setup.sh admin 2222 false false ~/.ssh/id_rsa.pub
 
 # Full custom setup
 sudo ./setup.sh webadmin 2222 true true /path/to/public_key.pub
@@ -57,7 +57,7 @@ sudo ./01_user.sh [username] [ssh_key_file]
 ```
 
 ### `02_ssh.sh` - SSH Hardening
-- Configurable SSH port (default: 456)
+- Configurable SSH port (default: 2222)
 - Disables root login and password authentication
 - Enables key-only authentication
 - Additional security settings (MaxAuthTries, ClientAlive, etc.)
@@ -71,7 +71,7 @@ sudo ./02_ssh.sh [port] [allowed_group]
 
 ### `03_fail2ban.sh` - Intrusion Prevention
 - Configurable ban times and retry limits
-- SSH protection with DDoS mitigation
+- SSH protection with aggressive blocking for repeat offenders
 - Ready-to-enable rules for web servers
 - Configuration testing before activation
 - Service status verification
@@ -115,7 +115,7 @@ sudo ./04_iptables.sh [ssh_port] [enable_http] [enable_https]
 ### Before Running
 1. **Run as root**: All scripts require root privileges
 2. **Have SSH key ready**: Password auth will be disabled
-3. **Note the SSH port**: Default is 456 (not 22)
+3. **Note the SSH port**: Default is 2222 (not 22)
 4. **Keep session open**: Test SSH before closing current session
 
 ### After Setup

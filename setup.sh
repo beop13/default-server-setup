@@ -3,7 +3,7 @@ set -e
 
 # Configuration
 USERNAME="${1:-admin}"
-SSH_PORT="${2:-456}"
+SSH_PORT="${2:-2222}"
 ENABLE_HTTP="${3:-false}"
 ENABLE_HTTPS="${4:-false}"
 SSH_KEY_FILE="${5:-}"
@@ -40,6 +40,11 @@ echo "SSH Key: ${SSH_KEY_FILE:-'Not provided'}"
 echo "Log: $LOGFILE"
 echo "=================================="
 echo ""
+
+sudo apt update
+sudo apt install -y locales
+sudo dpkg-reconfigure locales
+sudo apt install -y curl wget unzip git sudo vim less htop net-tools iproute2
 
 # Validate parameters
 if ! [[ "$SSH_PORT" =~ ^[0-9]+$ ]] || [ "$SSH_PORT" -lt 1024 ] || [ "$SSH_PORT" -gt 65535 ]; then

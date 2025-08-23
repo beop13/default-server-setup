@@ -36,11 +36,8 @@ if ! id -u "$USERNAME" >/dev/null 2>&1; then
     echo "Creating user: $USERNAME"
     echo "Please set a password for the new user:"
     
-    # Create user with password prompt
-    adduser --gecos "" "$USERNAME"
-    
-    # Add to admin group
-    usermod -aG admin "$USERNAME"
+    # Create user with password prompt (use --ingroup to avoid group creation conflicts)
+    adduser --gecos "" --ingroup admin "$USERNAME"
     log "User $USERNAME created and added to admin group"
 else
     log "User $USERNAME already exists"
