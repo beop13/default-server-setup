@@ -39,10 +39,16 @@ if [ -f /etc/fail2ban/jail.conf ] && [ ! -f /etc/fail2ban/jail.conf.bak ]; then
     cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.conf.bak
 fi
 
-# Create jail.local if it doesn't exist
+# Create minimal jail.local (do NOT copy jail.conf to avoid conflicts)
 if [ ! -f /etc/fail2ban/jail.local ]; then
-    log "Creating jail.local..."
-    cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+    log "Creating minimal jail.local..."
+    cat > /etc/fail2ban/jail.local <<EOF
+[DEFAULT]
+bantime  = $BAN_TIME
+findtime = $FIND_TIME
+maxretry = $MAX_RETRY
+backend  = systemd
+EOF
 else
     log "jail.local already exists"
 fi
@@ -60,7 +66,7 @@ bantime = $BAN_TIME
 findtime = $FIND_TIME
 maxretry = $MAX_RETRY
 
-# Additional SSH protection - using standard sshd filter with stricter settings
+# Additional SSH protection - stricter settings
 [sshd-aggressive]
 enabled = true
 filter  = sshd
