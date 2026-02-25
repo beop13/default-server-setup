@@ -22,11 +22,11 @@ fi
 
 # Создать группу admin, если нет
 if ! getent group $USERGROUP >/dev/null; then
-    log "Creating admin group..."
-    groupadd admin
-    log "Admin group created successfully"
+    log "Creating $USERGROUP group..."
+    groupadd $USERGROUP
+    log "$USERGROUP group created successfully"
 else
-    log "Admin group already exists"
+    log "$USERGROUP group already exists"
 fi
 
 # Создать пользователя, если нет
