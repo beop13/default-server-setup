@@ -3,6 +3,7 @@ set -e
 
 # Configuration
 USERNAME="${1:-admin}"
+USERGROUP=$USERNAME
 SSH_KEY_FILE="${2:-}"
 LOGFILE="/var/log/user-setup.log"
 
@@ -20,7 +21,7 @@ if [[ ! "$USERNAME" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
 fi
 
 # Создать группу admin, если нет
-if ! getent group admin >/dev/null; then
+if ! getent group $USERGROUP >/dev/null; then
     log "Creating admin group..."
     groupadd admin
     log "Admin group created successfully"
@@ -37,22 +38,22 @@ if ! id -u "$USERNAME" >/dev/null 2>&1; then
     echo "Please set a password for the new user:"
     
     # Create user with password prompt (use --ingroup to avoid group creation conflicts)
-    adduser --gecos "" --ingroup admin "$USERNAME"
+    adduser --gecos "" --ingroup "$USERGROUP" "$USERNAME"
     log "User $USERNAME created and added to admin group"
 else
     log "User $USERNAME already exists"
     # Ensure user is in admin group
     if ! groups "$USERNAME" | grep -q admin; then
-        usermod -aG admin "$USERNAME"
-        log "Added existing user $USERNAME to admin group"
+        usermod -aG "$USERGROUP" "$USERNAME"
+        log "Added existing user $USERNAME to $USERGROUP group"
     fi
 fi
 
 # Добавить в sudoers (без visudo)
-SUDOERS_FILE="/etc/sudoers.d/admin"
+SUDOERS_FILE="/etc/sudoers.d/$USERGROUP"
 if [ ! -f "$SUDOERS_FILE" ]; then
-    log "Adding admin group to sudoers..."
-    echo "admin ALL=(ALL) NOPASSWD:ALL" > "$SUDOERS_FILE"
+    log "Adding admin $USERGROUP to sudoers..."
+    echo "%$USERGROUP ALL=(ALL) NOPASSWD:ALL" > "$SUDOERS_FILE"
     chmod 440 "$SUDOERS_FILE"
     
     # Validate sudoers file
@@ -97,7 +98,7 @@ if [ -n "$SSH_KEY_FILE" ]; then
     if [ ! -d "$SSH_DIR" ]; then
         log "Creating SSH directory: $SSH_DIR"
         mkdir -p "$SSH_DIR"
-        chown "$USERNAME:$USERNAME" "$SSH_DIR"
+        chown "$USERNAME:$USERGROUP" "$SSH_DIR"
         chmod 700 "$SSH_DIR"
     fi
     
